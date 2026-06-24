@@ -56,8 +56,23 @@ python -m src.run_demo --data_dir data --subjects S2 --output_dir outputs --task
 If you want to test multiple subjects later, you can run:
 
 ```bash
-python -m src.run_demo --data_dir data --subjects S2 S3 S4 S5 --output_dir outputs --task binary
+python -m src.run_demo --data_dir data --subjects S2 S3 S4 S5 S6 S7 S8 S9 S10 S11 S13 S14 S15 S16 S17 --output_dir outputs --task binary
 ```
+
+## Current Results
+
+The current multi-subject baseline was run on these subjects:
+
+- Subjects: `S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S13, S14, S15, S16, S17`
+- Total valid windows: `1424`
+- Binary modeling windows: `897`
+- Evaluation: `leave-one-subject-out`
+- Logistic regression: accuracy `0.7781`, macro-F1 `0.7677`
+- Random forest: accuracy `0.7458`, macro-F1 `0.7090`
+
+This is a baseline demo using raw Empatica E4 CSV data and protocol timings from `Sx_quest.csv`.
+
+Logistic regression performed slightly better than random forest in this baseline setting. The result suggests that simple statistical features from wrist-worn signals contain useful stress-related information. The result should be interpreted as a baseline, not a final stress-recognition system.
 
 ## What The Demo Does
 
@@ -90,4 +105,4 @@ These outputs include the extracted window-level features, model metrics, a deta
 
 ## Limitations
 
-This raw E4 CSV version uses protocol timings from `Sx_quest.csv` and does not fully solve E4-RespiBAN synchronization. Later versions may use double-tap synchronization or `Sx.pkl` validation.
+This raw E4 CSV version uses protocol timings from `Sx_quest.csv` and does not fully solve E4-RespiBAN synchronization. More advanced versions may add double-tap synchronization, HRV features, EDA tonic/phasic decomposition, motion artifact filtering, and optional `Sx.pkl` validation.
