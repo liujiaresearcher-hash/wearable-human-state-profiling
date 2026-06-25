@@ -1,4 +1,6 @@
-# Wearable Stress Detection Demo
+# Multimodal Human-State Profiling from Wearable Signals
+
+A raw WESAD Empatica E4 pipeline for stress-state assessment and human factors interpretation
 
 This project is a beginner-friendly Python demo for stress detection with the WESAD dataset. The current version starts from the raw Empatica E4 CSV files stored inside each `Sx_E4_Data.zip` archive and uses questionnaire timing metadata from `Sx_quest.csv` to segment the recording into protocol conditions.
 
@@ -34,12 +36,14 @@ For a fuller explanation of this human factors framing, see `docs/human_factors_
 
 Raw E4 CSV files -> protocol parsing -> window segmentation -> statistical feature extraction -> baseline/stress classification -> evaluation outputs.
 
+In this demo, "multimodal" refers specifically to multimodal wrist-worn Empatica E4 signals: ACC, BVP, EDA, and TEMP. The current repository does not use video, audio, EEG, eye tracking, posture data, or other sensing channels.
+
 ## Current Data Layout
 
 Keep the existing folder structure unchanged:
 
 ```text
-affective-embodied-interaction-profiler/
+multimodal-human-state-profiling/
 |- data/
 |  |- S2/
 |  |  |- S2_E4_Data.zip
@@ -131,7 +135,9 @@ These outputs include the extracted window-level features, subject-level window 
 
 ## Limitations
 
-This raw E4 CSV version uses protocol timings from `Sx_quest.csv` and does not fully solve E4-RespiBAN synchronization. More advanced versions may add double-tap synchronization, HRV features, EDA tonic/phasic decomposition, motion artifact filtering, and optional `Sx.pkl` validation.
+This raw E4 CSV version uses protocol timings from `Sx_quest.csv` and does not fully solve E4-RespiBAN synchronization. It uses only Empatica E4 ACC, BVP, EDA, and TEMP signals; it does not use video, audio, EEG, eye tracking, posture data, RULA/REBA scoring, or musculoskeletal-load assessment. More advanced versions may add double-tap synchronization, HRV features, EDA tonic/phasic decomposition, motion artifact filtering, and optional `Sx.pkl` validation.
+
+The current pipeline is a baseline research demonstration, not a deployable stress-monitoring or occupational health system.
 
 ## Dataset Citation
 
