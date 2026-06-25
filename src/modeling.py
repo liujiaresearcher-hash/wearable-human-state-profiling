@@ -22,6 +22,7 @@ class ModelRunResult:
     model_name: str
     y_true: pd.Series
     y_pred: pd.Series
+    subjects: pd.Series
     evaluation_mode: str
 
 
@@ -104,6 +105,7 @@ def evaluate_models(feature_table: pd.DataFrame) -> list[ModelRunResult]:
                 model_name=model_name,
                 y_true=y.reset_index(drop=True),
                 y_pred=pd.Series(predictions),
+                subjects=groups.reset_index(drop=True),
                 evaluation_mode=evaluation_mode,
             )
         )

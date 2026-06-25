@@ -9,7 +9,14 @@ import pandas as pd
 
 from .config import SUPPORTED_TASKS
 from .data_io import find_subject_paths, read_subject_e4_data
-from .evaluation import ensure_output_dirs, save_demo_report, save_eda_timeline, save_model_outputs, save_window_features
+from .evaluation import (
+    ensure_output_dirs,
+    save_demo_report,
+    save_eda_timeline,
+    save_model_outputs,
+    save_subject_window_summary,
+    save_window_features,
+)
 from .features import build_feature_table
 from .modeling import evaluate_models
 from .preprocessing import add_relative_time_axes, segment_protocol_windows
@@ -60,6 +67,7 @@ def main() -> None:
         raise ValueError("No windows were created. Check the protocol timing and signal files.")
 
     save_window_features(feature_table, tables_dir)
+    save_subject_window_summary(feature_table, tables_dir)
     model_results = evaluate_models(feature_table)
     save_model_outputs(model_results, tables_dir, figures_dir)
     save_eda_timeline(pd.concat(eda_tables, ignore_index=True), figures_dir)

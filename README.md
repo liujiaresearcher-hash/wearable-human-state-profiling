@@ -6,6 +6,30 @@ This project is a beginner-friendly Python demo for stress detection with the WE
 
 The goal of this repository is to provide a simple and readable starting point for wearable stress detection experiments. It focuses on a small first version that is easy to inspect, run, and extend rather than a fully optimized research pipeline.
 
+## Research positioning: from infrastructure state assessment to human-state sensing
+
+My previous work focused on infrastructure sensing, condition assessment, quality evaluation, and decision-oriented analysis. This demo transfers the same assessment logic to human-centered wearable sensing: raw measurements are organized, processed, summarized, and evaluated as evidence of a system state.
+
+The pipeline follows a familiar chain:
+
+```text
+raw sensor data -> preprocessing -> feature extraction -> state assessment -> evaluation
+```
+
+In this repository, the current state-assessment task is baseline vs stress recognition from wearable Empatica E4 signals. The demo should be read as a baseline research example, not a final deployable stress-recognition system. Its purpose is to show a reproducible path from raw physiological and motion data to a transparent human-state sensing evaluation.
+
+For a fuller explanation of this positioning, see `docs/research_positioning.md`.
+
+## Human factors and ergonomics perspective
+
+This demo is not a physical ergonomics posture-risk demo. It does not estimate posture, joint loading, RULA/REBA scores, or musculoskeletal risk.
+
+Instead, it focuses on cognitive and affective ergonomics: stress, psychophysiological strain, and human-state assessment. The pipeline uses wrist-worn physiological and motion signals to estimate whether a subject is in a baseline or stress condition.
+
+From a human factors perspective, the analysis can be interpreted as a first step toward operator-state monitoring, workload-aware systems, and human-centered sensing. The current result is a baseline demonstration, not a deployable stress-monitoring system.
+
+For a fuller explanation of this human factors framing, see `docs/human_factors_positioning.md`.
+
 ## Pipeline Overview
 
 Raw E4 CSV files -> protocol parsing -> window segmentation -> statistical feature extraction -> baseline/stress classification -> evaluation outputs.
@@ -98,10 +122,12 @@ outputs/
    |- classification_report.csv
    |- confusion_matrix.csv
    |- model_results.csv
+   |- subject_loso_metrics.csv
+   |- subject_window_summary.csv
    `- window_features.csv
 ```
 
-These outputs include the extracted window-level features, model metrics, a detailed classification report, a confusion matrix table, and two beginner-friendly visual summaries.
+These outputs include the extracted window-level features, subject-level window counts, model metrics, subject-level leave-one-subject-out metrics, a detailed classification report, a confusion matrix table, and two beginner-friendly visual summaries.
 
 ## Limitations
 

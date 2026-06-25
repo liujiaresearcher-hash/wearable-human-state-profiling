@@ -38,12 +38,27 @@ def save_window_features(feature_table: pd.DataFrame, tables_dir: Path) -> Path:
     return path
 
 
+def save_subject_window_summary(feature_table: pd.DataFrame, tables_dir: Path) -> Path:
+    """Write window counts by subject and class label."""
+
+    path = tables_dir / "subject_window_summary.csv"
+    summary = (
+        feature_table.groupby(["subject", "label"], as_index=False)
+        .size()
+        .rename(columns={"size": "number_of_windows"})
+        .sort_values(["subject", "label"])
+    )
+    summary.to_csv(path, index=False)
+    return path
+
+
 def save_model_outputs(results: list[ModelRunResult], tables_dir: Path, figures_dir: Path) -> dict[str, Path]:
     """Write model metrics, reports, and a confusion matrix figure."""
 
     model_rows: list[dict[str, object]] = []
     report_frames: list[pd.DataFrame] = []
     confusion_frames: list[pd.DataFrame] = []
+    subject_metric_rows: list[dict[str, object]] = []
 
     first_result = results[0]
     first_matrix = confusion_matrix(first_result.y_true, first_result.y_pred, labels=[0, 1])
@@ -73,13 +88,34 @@ def save_model_outputs(results: list[ModelRunResult], tables_dir: Path, figures_
         matrix_frame.insert(0, "model_name", result.model_name)
         confusion_frames.append(matrix_frame)
 
+        prediction_frame = pd.DataFrame(
+            {
+                "subject": result.subjects,
+                "y_true": result.y_true,
+                "y_pred": result.y_pred,
+            }
+        )
+        for subject, group in prediction_frame.groupby("subject"):
+            subject_metric_rows.append(
+                {
+                    "model_name": result.model_name,
+                    "evaluation_mode": result.evaluation_mode,
+                    "held_out_subject": subject,
+                    "number_of_windows": len(group),
+                    "accuracy": accuracy_score(group["y_true"], group["y_pred"]),
+                    "f1_macro": f1_score(group["y_true"], group["y_pred"], labels=[0, 1], average="macro", zero_division=0),
+                }
+            )
+
     model_results_path = tables_dir / "model_results.csv"
     classification_report_path = tables_dir / "classification_report.csv"
     confusion_matrix_path = tables_dir / "confusion_matrix.csv"
+    subject_loso_metrics_path = tables_dir / "subject_loso_metrics.csv"
 
     pd.DataFrame(model_rows).to_csv(model_results_path, index=False)
     pd.concat(report_frames, ignore_index=True).to_csv(classification_report_path, index=False)
     pd.concat(confusion_frames, ignore_index=True).to_csv(confusion_matrix_path, index=False)
+    pd.DataFrame(subject_metric_rows).to_csv(subject_loso_metrics_path, index=False)
 
     confusion_figure_path = figures_dir / "confusion_matrix.png"
     fig, ax = plt.subplots(figsize=(5, 4))
@@ -103,6 +139,7 @@ def save_model_outputs(results: list[ModelRunResult], tables_dir: Path, figures_
         "model_results": model_results_path,
         "classification_report": classification_report_path,
         "confusion_matrix": confusion_matrix_path,
+        "subject_loso_metrics": subject_loso_metrics_path,
         "confusion_matrix_figure": confusion_figure_path,
     }
 
@@ -156,6 +193,12 @@ def save_demo_report(
 
     lines.extend(
         [
+            "",
+            "## Human factors interpretation",
+            "",
+            "- Baseline is interpreted as a lower-strain reference condition.",
+            "- Stress is interpreted as an elevated psychophysiological strain condition.",
+            "- Model predictions are used only for demo-level state assessment.",
             "",
             "## Notes",
             "",
