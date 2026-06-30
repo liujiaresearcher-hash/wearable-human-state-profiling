@@ -1,4 +1,4 @@
-# Multimodal Human-State Profiling from Wearable Signals
+# Wearable Human-State Profiling from Physiological Signals
 
 A raw WESAD Empatica E4 pipeline for stress-state assessment and human factors interpretation
 
@@ -36,14 +36,14 @@ For a fuller explanation of this human factors framing, see `docs/human_factors_
 
 Raw E4 CSV files -> protocol parsing -> window segmentation -> statistical feature extraction -> baseline/stress classification -> evaluation outputs.
 
-In this demo, "multimodal" refers specifically to multimodal wrist-worn Empatica E4 signals: ACC, BVP, EDA, and TEMP. The current repository does not use video, audio, EEG, eye tracking, posture data, or other sensing channels.
+The current wearable signals are ACC, BVP, EDA, and TEMP from the wrist-worn Empatica E4. The current repository does not use video, audio, EEG, eye tracking, posture data, or other sensing channels.
 
 ## Current Data Layout
 
 Keep the existing folder structure unchanged:
 
 ```text
-multimodal-human-state-profiling/
+wearable-human-state-profiling/
 |- data/
 |  |- S2/
 |  |  |- S2_E4_Data.zip
