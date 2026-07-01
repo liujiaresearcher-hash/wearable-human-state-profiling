@@ -1,8 +1,8 @@
 # Wearable Human-State Profiling from Physiological Signals
 
-A raw WESAD Empatica E4 pipeline for stress-state assessment and human factors interpretation
+A raw WESAD Empatica E4 baseline pipeline for wearable human-state sensing research
 
-This project is a beginner-friendly Python demo for stress detection with the WESAD dataset. The current version starts from the raw Empatica E4 CSV files stored inside each `Sx_E4_Data.zip` archive and uses questionnaire timing metadata from `Sx_quest.csv` to segment the recording into protocol conditions.
+This project is a beginner-friendly Python demo for baseline versus stress-state classification experiments with the WESAD dataset. The current version starts from the raw Empatica E4 CSV files stored inside each `Sx_E4_Data.zip` archive and uses questionnaire timing metadata from `Sx_quest.csv` to segment the recording into protocol conditions.
 
 ## Project Purpose
 
@@ -18,7 +18,7 @@ The pipeline follows a familiar chain:
 raw sensor data -> preprocessing -> feature extraction -> state assessment -> evaluation
 ```
 
-In this repository, the current state-assessment task is baseline vs stress recognition from wearable Empatica E4 signals. The demo should be read as a baseline research example, not a final deployable stress-recognition system. Its purpose is to show a reproducible path from raw physiological and motion data to a transparent human-state sensing evaluation.
+In this repository, the current state-assessment task is baseline vs stress recognition from wearable Empatica E4 signals. The demo should be read as a baseline research example, not a final deployable stress-recognition system or a clinical diagnostic tool. Its purpose is to show a reproducible path from raw physiological and motion data to a transparent human-state sensing evaluation.
 
 For a fuller explanation of this positioning, see `docs/research_positioning.md`.
 
@@ -28,7 +28,7 @@ This demo is not a physical ergonomics posture-risk demo. It does not estimate p
 
 Instead, it focuses on cognitive and affective ergonomics: stress, psychophysiological strain, and human-state assessment. The pipeline uses wrist-worn physiological and motion signals to estimate whether a subject is in a baseline or stress condition.
 
-From a human factors perspective, the analysis can be interpreted as a first step toward operator-state monitoring, workload-aware systems, and human-centered sensing. The current result is a baseline demonstration, not a deployable stress-monitoring system.
+From a human factors perspective, the analysis can be interpreted as an offline research example for studying operator state, workload-related signals, and human-centered sensing. The current result is a baseline demonstration, not a deployable stress-monitoring system or a health assessment product.
 
 For a fuller explanation of this human factors framing, see `docs/human_factors_positioning.md`.
 
@@ -38,9 +38,17 @@ Raw E4 CSV files -> protocol parsing -> window segmentation -> statistical featu
 
 The current wearable signals are ACC, BVP, EDA, and TEMP from the wrist-worn Empatica E4. The current repository does not use video, audio, EEG, eye tracking, posture data, or other sensing channels.
 
-## Current Data Layout
+## Dataset Access
 
-Keep the existing folder structure unchanged:
+This repository does not redistribute the WESAD dataset. Users must obtain WESAD from the official dataset source and comply with the official license or access terms themselves.
+
+The local data layout below is documented only so that experiments can be reproduced after users have obtained the dataset independently. The repository provides a reproducible processing and evaluation pipeline, not the dataset itself.
+
+In the expected local layout, raw WESAD subject folders, raw subject files, `.pkl` files, Empatica E4 zip files, quest files, and generated outputs are ignored and should not be committed. Keep local dataset files under `data/` and generated results under `outputs/`.
+
+## Expected Local Data Layout
+
+After obtaining WESAD independently, keep the local folder structure unchanged:
 
 ```text
 wearable-human-state-profiling/
@@ -69,7 +77,7 @@ The demo does not use `Sx.pkl` as the main input.
 
 ## Do Not Commit Data
 
-The WESAD dataset files should be kept locally under `data/` and must not be uploaded to GitHub.
+The WESAD dataset files should be kept locally under `data/` and must not be uploaded to GitHub. Generated outputs should be kept locally under `outputs/` and should not be committed.
 
 ## How To Run The S2 Demo
 
@@ -100,7 +108,7 @@ The current multi-subject baseline was run on these subjects:
 
 This is a baseline demo using raw Empatica E4 CSV data and protocol timings from `Sx_quest.csv`.
 
-Logistic regression performed slightly better than random forest in this baseline setting. The result suggests that simple statistical features from wrist-worn signals contain useful stress-related information. The result should be interpreted as a baseline, not a final stress-recognition system.
+Logistic regression performed slightly better than random forest in this baseline setting. The result suggests that simple statistical features from wrist-worn signals contain useful stress-related information in this benchmark task. The result should be interpreted as a baseline, not a final stress-recognition system, health product, or clinical diagnostic method.
 
 ## What The Demo Does
 
