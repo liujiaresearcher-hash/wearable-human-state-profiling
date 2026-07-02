@@ -34,7 +34,9 @@ For a fuller explanation of this human factors framing, see `docs/human_factors_
 
 ## Pipeline Overview
 
-Raw E4 CSV files -> protocol parsing -> window segmentation -> statistical feature extraction -> baseline/stress classification -> evaluation outputs.
+![Public-safe pipeline overview schematic](docs/assets/pipeline_overview.png)
+
+The public-safe schematic above summarizes the repository flow: raw Empatica E4 ACC, BVP, EDA, and TEMP signals are segmented by protocol windows, converted into interpretable features, modeled for baseline/stress classification, and summarized as user-state indicators.
 
 The current wearable signals are ACC, BVP, EDA, and TEMP from the wrist-worn Empatica E4. The current repository does not use video, audio, EEG, eye tracking, posture data, or other sensing channels.
 
@@ -45,6 +47,12 @@ This repository does not redistribute the WESAD dataset. Users must obtain WESAD
 The local data layout below is documented only so that experiments can be reproduced after users have obtained the dataset independently. The repository provides a reproducible processing and evaluation pipeline, not the dataset itself.
 
 In the expected local layout, raw WESAD subject folders, raw subject files, `.pkl` files, Empatica E4 zip files, quest files, and generated outputs are ignored and should not be committed. Keep local dataset files under `data/` and generated results under `outputs/`.
+
+## Evaluation Scheme
+
+![Public-safe leave-one-subject-out evaluation schematic](docs/assets/evaluation_scheme.png)
+
+The evaluation schematic shows the leave-one-subject-out setup used for multi-subject baseline assessment: each fold trains on 14 WESAD subjects, tests on 1 held-out subject, and reports aggregate accuracy and macro-F1. The figure is schematic only and does not contain WESAD signal traces, subject-level timelines, feature tables, or subject-level results.
 
 ## Expected Local Data Layout
 
