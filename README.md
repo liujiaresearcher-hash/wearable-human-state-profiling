@@ -2,7 +2,7 @@
 
 A raw WESAD Empatica E4 baseline pipeline for wearable human-state sensing research
 
-This project is a beginner-friendly Python demo for baseline versus stress-state classification experiments with the WESAD dataset. The current version starts from the raw Empatica E4 CSV files stored inside each `Sx_E4_Data.zip` archive and uses questionnaire timing metadata from `Sx_quest.csv` to segment the recording into protocol conditions.
+This project is a small, reproducible Python research demo for wearable human-state sensing experiments with the WESAD dataset. The current version starts from the raw Empatica E4 CSV files stored inside each `Sx_E4_Data.zip` archive and uses questionnaire timing metadata from `Sx_quest.csv` to segment the recording into protocol conditions.
 
 ## Project Purpose
 
