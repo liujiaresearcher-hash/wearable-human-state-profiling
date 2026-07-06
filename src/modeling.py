@@ -24,6 +24,9 @@ class ModelRunResult:
     y_pred: pd.Series
     subjects: pd.Series
     evaluation_mode: str
+    window_metadata: pd.DataFrame
+    feature_columns: list[str]
+    y_probability_stress: pd.Series | None = None
 
 
 def build_models() -> dict[str, Pipeline]:
@@ -63,17 +66,31 @@ def build_models() -> dict[str, Pipeline]:
     }
 
 
-def prepare_binary_dataset(feature_table: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series, pd.Series]:
+def prepare_binary_subset(feature_table: pd.DataFrame) -> pd.DataFrame:
     """Keep only baseline vs stress rows for the first binary demo."""
 
     subset = feature_table[feature_table["condition"].isin(["baseline", "stress"])].copy()
     if subset.empty:
         raise ValueError("No baseline/stress windows available for binary modeling")
+    return subset
 
-    feature_columns = [
+
+def get_model_feature_columns(feature_table: pd.DataFrame) -> list[str]:
+    """Return numeric feature columns used by the binary models."""
+
+    return [
         column
-        for column in subset.columns
+        for column in feature_table.columns
         if column not in {"subject", "condition", "label", "window_start_s", "window_end_s"}
+    ]
+
+
+def prepare_binary_dataset(feature_table: pd.DataFrame) -> tuple[pd.DataFrame, pd.Series, pd.Series]:
+    """Prepare feature matrix, labels, and subject groups for binary modeling."""
+
+    subset = prepare_binary_subset(feature_table)
+    feature_columns = [
+        column for column in get_model_feature_columns(subset) if pd.api.types.is_numeric_dtype(subset[column])
     ]
     x = subset[feature_columns]
     y = subset["label"].astype(int)
@@ -84,8 +101,11 @@ def prepare_binary_dataset(feature_table: pd.DataFrame) -> tuple[pd.DataFrame, p
 def evaluate_models(feature_table: pd.DataFrame) -> list[ModelRunResult]:
     """Run either subject-aware or internal sanity-check evaluation."""
 
-    x, y, groups = prepare_binary_dataset(feature_table)
+    subset = prepare_binary_subset(feature_table)
+    x, y, groups = prepare_binary_dataset(subset)
     unique_subjects = groups.nunique()
+    feature_columns = list(x.columns)
+    window_metadata = subset[["subject", "condition", "window_start_s", "window_end_s"]].reset_index(drop=True)
 
     if unique_subjects == 1:
         # With one subject, this is only a quick internal check, not a generalization test.
@@ -99,7 +119,14 @@ def evaluate_models(feature_table: pd.DataFrame) -> list[ModelRunResult]:
 
     results: list[ModelRunResult] = []
     for model_name, pipeline in build_models().items():
-        predictions = cross_val_predict(pipeline, x, y, cv=splitter, method="predict", **split_kwargs)
+        probabilities = None
+        if model_name == "logistic_regression":
+            probability_matrix = cross_val_predict(pipeline, x, y, cv=splitter, method="predict_proba", **split_kwargs)
+            probabilities = pd.Series(probability_matrix[:, 1])
+            predictions = (probabilities >= 0.5).astype(int)
+        else:
+            predictions = cross_val_predict(pipeline, x, y, cv=splitter, method="predict", **split_kwargs)
+
         results.append(
             ModelRunResult(
                 model_name=model_name,
@@ -107,6 +134,9 @@ def evaluate_models(feature_table: pd.DataFrame) -> list[ModelRunResult]:
                 y_pred=pd.Series(predictions),
                 subjects=groups.reset_index(drop=True),
                 evaluation_mode=evaluation_mode,
+                window_metadata=window_metadata.copy(),
+                feature_columns=feature_columns,
+                y_probability_stress=probabilities,
             )
         )
     return results

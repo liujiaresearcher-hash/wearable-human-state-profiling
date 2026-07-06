@@ -168,21 +168,27 @@ def save_demo_report(
     subjects: list[str],
     feature_table: pd.DataFrame,
     model_results: list[ModelRunResult],
+    subject_profiles: pd.DataFrame | None = None,
+    feature_importance_summary: pd.DataFrame | None = None,
+    uncertain_windows: pd.DataFrame | None = None,
+    feedback_summary: pd.DataFrame | None = None,
 ) -> Path:
     """Write a short markdown report describing the demo run."""
 
     report_path = output_dir / "demo_report.md"
     condition_counts = feature_table["condition"].value_counts().sort_index()
     best_result = model_results[0]
+    uncertain_count = 0 if uncertain_windows is None else len(uncertain_windows)
 
     lines = [
-        "# Wearable Stress Detection Demo Report",
+        "# Wearable Human-State Profiling Demo Report",
         "",
         "## Run Summary",
         "",
         f"- Subjects: {', '.join(subjects)}",
         f"- Number of windows: {len(feature_table)}",
         f"- Evaluation mode: {best_result.evaluation_mode}",
+        "- Task: protocol baseline/stress distinction from wearable Empatica E4 windows",
         "",
         "## Window Counts By Condition",
         "",
@@ -194,17 +200,86 @@ def save_demo_report(
     lines.extend(
         [
             "",
-            "## Human factors interpretation",
+            "## Modeling Summary",
             "",
-            "- Baseline is interpreted as a lower-strain reference condition.",
-            "- Stress is interpreted as an elevated psychophysiological strain condition.",
-            "- Model predictions are used only for demo-level state assessment.",
+        ]
+    )
+
+    for result in model_results:
+        lines.append(
+            f"- {result.model_name}: accuracy {accuracy_score(result.y_true, result.y_pred):.4f}, "
+            f"macro-F1 {f1_score(result.y_true, result.y_pred, average='macro', zero_division=0):.4f}"
+        )
+
+    lines.extend(
+        [
+            "- Model outputs are used only for a reproducible research demo of the baseline/stress distinction.",
             "",
-            "## Notes",
+            "## Subject-Level Profile Summary",
+            "",
+        ]
+    )
+
+    if subject_profiles is not None and not subject_profiles.empty:
+        lines.append(f"- Subject profile rows generated: {len(subject_profiles)}")
+        group_counts = subject_profiles["dominant_changed_feature_group"].value_counts().head(4)
+        for group_name, count in group_counts.items():
+            lines.append(f"- Dominant descriptive shift in {group_name}: {count} subject(s)")
+        lines.append("- Full local cards: outputs/reports/subject_profile_cards.md")
+    else:
+        lines.append("- Subject profiles were not available for this run.")
+
+    lines.extend(
+        [
+            "",
+            "## Explanation Summary",
+            "",
+        ]
+    )
+
+    if feature_importance_summary is not None and not feature_importance_summary.empty:
+        lines.append(
+            "- Feature contribution summary is based on logistic-regression model-associated feature weights."
+        )
+        for _, row in feature_importance_summary.head(4).iterrows():
+            lines.append(
+                f"- {row['feature_group']}: total absolute model weight "
+                f"{row['total_absolute_model_weight']:.4f}; top weighted feature {row['top_weighted_feature']}"
+            )
+        lines.append("- Subject-level top feature changes are descriptive differences, not causal explanations.")
+    else:
+        lines.append("- Feature contribution summary was not available for this run.")
+
+    lines.extend(
+        [
+            "",
+            "## Uncertainty Summary",
+            "",
+            f"- Ambiguous model output windows near 0.5 probability: {uncertain_count}",
+            "- These windows are framed as ambiguous model output, not as abnormal user states.",
+            "",
+            "## Feedback Card Examples",
+            "",
+        ]
+    )
+
+    if feedback_summary is not None and not feedback_summary.empty:
+        for _, row in feedback_summary.head(2).iterrows():
+            lines.append(f"- {row['subject_id']}: {row['feedback_style_b_reflective_prompt']}")
+        lines.append("- Full local cards: outputs/reports/user_feedback_cards.md")
+    else:
+        lines.append("- Feedback cards were not available for this run.")
+
+    lines.extend(
+        [
+            "",
+            "## Limitations",
             "",
             "- This demo uses raw Empatica E4 CSV data with protocol timing from Sx_quest.csv.",
             "- The binary task keeps only baseline vs stress windows during modeling.",
             "- Single-subject evaluation is only an internal sanity check and not a final generalization result.",
+            "- Subject profiles, explanation summaries, and feedback cards are derived local research artifacts.",
+            "- The feedback examples are HCI interpretation examples, not clinical conclusions or deployable monitoring.",
         ]
     )
 

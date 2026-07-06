@@ -18,7 +18,7 @@ The pipeline follows a familiar chain:
 raw sensor data -> preprocessing -> feature extraction -> state assessment -> evaluation
 ```
 
-In this repository, the current state-assessment task is baseline vs stress recognition from wearable Empatica E4 signals. The demo should be read as a baseline research example, not a final deployable stress-recognition system or a clinical diagnostic tool. Its purpose is to show a reproducible path from raw physiological and motion data to a transparent human-state sensing evaluation.
+In this repository, the current state-assessment task is baseline vs stress recognition from wearable Empatica E4 signals. The demo should be read as a baseline research example, not a final deployable stress-recognition system or a clinical tool. Its purpose is to show a reproducible path from raw physiological and motion data to a transparent human-state sensing evaluation.
 
 For a fuller explanation of this positioning, see `docs/research_positioning.md`.
 
@@ -28,9 +28,21 @@ This demo is not a physical ergonomics posture-risk demo. It does not estimate p
 
 Instead, it focuses on cognitive and affective ergonomics: stress, psychophysiological strain, and human-state assessment. The pipeline uses wrist-worn physiological and motion signals to estimate whether a subject is in a baseline or stress condition.
 
-From a human factors perspective, the analysis can be interpreted as an offline research example for studying operator state, workload-related signals, and human-centered sensing. The current result is a baseline demonstration, not a deployable stress-monitoring system or a health assessment product.
+From a human factors perspective, the analysis can be interpreted as an offline research example for studying operator state, workload-related signals, and human-centered sensing. The current result is a baseline demonstration, not a deployable stress-monitoring system, diagnosis tool, medical advice, or health assessment product.
 
 For a fuller explanation of this human factors framing, see `docs/human_factors_positioning.md`.
+
+## Interpretation and feedback layer
+
+This repository is no longer only a classifier demo. It also explores how wearable signals can be transformed into interpretable user-state indicators for human-computer interaction research.
+
+The added interpretation layer generates subject-level state profiles, lightweight explanation summaries, ambiguity reports, and user-facing feedback card examples. These artifacts are generated locally from the user's own WESAD copy and are written under `outputs/`.
+
+The layer uses transparent methods: feature-group aggregation, logistic-regression model-associated feature weights, descriptive stress-minus-baseline feature differences, and probability-based ambiguity flags for logistic-regression outputs near 0.5. These summaries are intended to support careful interpretation of the WESAD protocol baseline/stress distinction. They are not causal explanations and are not clinical conclusions.
+
+Generated profile tables, feature-change tables, ambiguity reports, and feedback cards are not committed because they are derived from WESAD subject data. This repository remains a research demo, not a clinical system, diagnosis tool, medical advice, or deployable stress monitor.
+
+For a fuller explanation of this layer, see `docs/feedback_interpretation_layer.md`.
 
 ## Pipeline Overview
 
@@ -116,7 +128,7 @@ The current multi-subject baseline was run on these subjects:
 
 This is a baseline demo using raw Empatica E4 CSV data and protocol timings from `Sx_quest.csv`.
 
-Logistic regression performed slightly better than random forest in this baseline setting. The result suggests that simple statistical features from wrist-worn signals contain useful stress-related information in this benchmark task. The result should be interpreted as a baseline, not a final stress-recognition system, health product, or clinical diagnostic method.
+Logistic regression performed slightly better than random forest in this baseline setting. The result suggests that simple statistical features from wrist-worn signals contain useful stress-related information in this benchmark task. The result should be interpreted as a baseline, not a final stress-recognition system, health product, or clinical method.
 
 ## What The Demo Does
 
@@ -127,6 +139,10 @@ Logistic regression performed slightly better than random forest in this baselin
 5. Extracts simple statistical features from each window
 6. Trains baseline binary classifiers for `baseline` vs `stress`
 7. Exports tables, a confusion matrix figure, an EDA timeline figure, and a short markdown report
+8. Builds subject-level baseline/stress state profiles
+9. Summarizes lightweight model-associated and descriptive explanations
+10. Flags ambiguous logistic-regression outputs near the binary decision boundary
+11. Generates research-demo feedback card examples for HCI interpretation
 
 ## Output Files
 
@@ -138,22 +154,30 @@ outputs/
 |- figures/
 |  |- confusion_matrix.png
 |  `- eda_timeline.png
+|- reports/
+|  |- subject_profile_cards.md
+|  `- user_feedback_cards.md
 `- tables/
    |- classification_report.csv
    |- confusion_matrix.csv
+   |- feature_importance_summary.csv
+   |- feedback_card_summary.csv
    |- model_results.csv
+   |- subject_state_profiles.csv
    |- subject_loso_metrics.csv
+   |- subject_top_feature_changes.csv
    |- subject_window_summary.csv
+   |- uncertain_windows.csv
    `- window_features.csv
 ```
 
-These outputs include the extracted window-level features, subject-level window counts, model metrics, subject-level leave-one-subject-out metrics, a detailed classification report, a confusion matrix table, and two beginner-friendly visual summaries.
+These outputs include the extracted window-level features, subject-level window counts, model metrics, subject-level leave-one-subject-out metrics, a detailed classification report, a confusion matrix table, beginner-friendly visual summaries, subject-level profile summaries, lightweight explanation tables, ambiguity reports, and feedback-card examples.
 
 ## Limitations
 
 This raw E4 CSV version uses protocol timings from `Sx_quest.csv` and does not fully solve E4-RespiBAN synchronization. It uses only Empatica E4 ACC, BVP, EDA, and TEMP signals; it does not use video, audio, EEG, eye tracking, posture data, RULA/REBA scoring, or musculoskeletal-load assessment. More advanced versions may add double-tap synchronization, HRV features, EDA tonic/phasic decomposition, motion artifact filtering, and optional `Sx.pkl` validation.
 
-The current pipeline is a baseline research demonstration, not a deployable stress-monitoring or occupational health system.
+The current pipeline is a baseline research demonstration, not a deployable stress-monitoring system, occupational health system, clinical system, diagnosis tool, or source of medical advice.
 
 ## Dataset Citation
 
