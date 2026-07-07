@@ -44,6 +44,20 @@ Generated profile tables, feature-change tables, ambiguity reports, and feedback
 
 For a fuller explanation of this layer, see `docs/feedback_interpretation_layer.md`.
 
+## HCI relevance
+
+This demo is not intended to develop a clinical stress detector or
+deployment-ready health-monitoring product. Instead, it explores how wearable
+physiological signals can be organized into interpretable human-state
+indicators.
+
+From an HCI perspective, the next question is not only whether baseline and
+stress conditions can be classified, but how sensing outputs may be communicated
+to users in a personalized and understandable way. Possible next steps include
+generating subject-level state profiles, explaining which signal patterns
+changed, communicating model uncertainty, and comparing different styles of
+reflective feedback.
+
 ## Pipeline Overview
 
 ![Public-safe pipeline overview schematic](docs/assets/pipeline_overview.png)
