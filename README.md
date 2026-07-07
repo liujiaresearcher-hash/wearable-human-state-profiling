@@ -46,10 +46,15 @@ For a fuller explanation of this layer, see `docs/feedback_interpretation_layer.
 
 ## HCI relevance
 
-This demo is not intended to develop a clinical stress detector or
+This demo is exploratory and non-clinical. It is not intended to develop a
+deployable stress-monitoring product, mental-health diagnosis tool, or
 deployment-ready health-monitoring product. Instead, it explores how wearable
 physiological signals can be organized into interpretable human-state
 indicators.
+
+In the broader research direction, this wearable-sensing prototype is treated
+as complementary state information that may support movement-based and embodied
+feedback, rather than as a standalone clinical stress-detection system.
 
 From an HCI perspective, the next question is not only whether baseline and
 stress conditions can be classified, but how sensing outputs may be communicated
