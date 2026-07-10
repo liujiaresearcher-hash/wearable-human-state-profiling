@@ -4,6 +4,10 @@ A raw WESAD Empatica E4 baseline pipeline for wearable human-state sensing resea
 
 This project is a small, reproducible Python research demo for wearable human-state sensing experiments with the WESAD dataset. The current version starts from the raw Empatica E4 CSV files stored inside each `Sx_E4_Data.zip` archive and uses questionnaire timing metadata from `Sx_quest.csv` to segment the recording into protocol conditions.
 
+This repository is an exploratory state-feedback demo. It is not the main focus
+of my current PhD application direction, but it reflects a broader interest in
+interpretable state assessment and feedback design.
+
 ## Project Purpose
 
 The goal of this repository is to provide a simple and readable starting point for wearable stress detection experiments. It focuses on a small first version that is easy to inspect, run, and extend rather than a fully optimized research pipeline.
@@ -44,24 +48,23 @@ Generated profile tables, feature-change tables, ambiguity reports, and feedback
 
 For a fuller explanation of this layer, see `docs/feedback_interpretation_layer.md`.
 
-## HCI relevance
+## Exploratory State-Feedback Relevance
 
 This demo is exploratory and non-clinical. It is not intended to develop a
 deployable stress-monitoring product, mental-health diagnosis tool, or
 deployment-ready health-monitoring product. Instead, it explores how wearable
 physiological signals can be organized into interpretable human-state
-indicators.
+indicators as a state-feedback extension.
 
-In the broader research direction, this wearable-sensing prototype is treated
-as complementary state information that may support movement-based and embodied
-feedback, rather than as a standalone clinical stress-detection system.
+In my current PhD application narrative, this repository is kept separate from
+the main monitoring-to-decision line for engineering assets. It can be read as a
+small exploratory extension of the same state-assessment logic, rather than as a
+new core HCI direction.
 
-From an HCI perspective, the next question is not only whether baseline and
-stress conditions can be classified, but how sensing outputs may be communicated
-to users in a personalized and understandable way. Possible next steps include
-generating subject-level state profiles, explaining which signal patterns
-changed, communicating model uncertainty, and comparing different styles of
-reflective feedback.
+The feedback question here is not only whether baseline and stress conditions
+can be classified, but how sensing outputs may be communicated in a personalized
+and understandable way. The current feedback cards are illustrative research
+artifacts only.
 
 ## Pipeline Overview
 
