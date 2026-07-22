@@ -1,96 +1,70 @@
 # Wearable Human-State Profiling from Physiological Signals
 
-A raw WESAD Empatica E4 baseline pipeline for wearable human-state sensing research
+**A reproducible and uncertainty-aware baseline for operator-state sensing and interpretable feedback in human-centred automation.**
 
-This project is a small, reproducible Python research demo for wearable human-state sensing experiments with the WESAD dataset. The current version starts from the raw Empatica E4 CSV files stored inside each `Sx_E4_Data.zip` archive and uses questionnaire timing metadata from `Sx_quest.csv` to segment the recording into protocol conditions.
+This repository extends my monitoring-to-decision research from engineering and manufacturing-process states to human states in human-centred automation. It explores how wearable physiological and motion signals can support interpretable operator-state assessment, uncertainty-aware feedback, and future adaptive human-machine collaboration.
 
-This repository is an exploratory state-feedback demo. It is not the main focus
-of my current PhD application direction, but it reflects a broader interest in
-interpretable state assessment and feedback design.
+The current benchmark task distinguishes WESAD protocol baseline and stress conditions. It is designed as a transparent research baseline that connects sensing, state estimation, evaluation, and feedback—not as a diagnosis or a completed automation system.
 
-## Project Purpose
+## Project purpose
 
-The goal of this repository is to provide a simple and readable starting point for wearable stress detection experiments. It focuses on a small first version that is easy to inspect, run, and extend rather than a fully optimized research pipeline.
+The repository provides a readable, reproducible path from raw Empatica E4 recordings to operator-state evidence. It applies the same monitoring-to-decision logic used in engineering systems: organize heterogeneous measurements, build interpretable state representations, quantify model performance and ambiguity, and communicate results in a form that could inform later human-machine decisions.
 
-## Research positioning: from infrastructure state assessment to human-state sensing
-
-My previous work focused on infrastructure sensing, condition assessment, quality evaluation, and decision-oriented analysis. This demo transfers the same assessment logic to human-centered wearable sensing: raw measurements are organized, processed, summarized, and evaluated as evidence of a system state.
-
-The pipeline follows a familiar chain:
+## Potential Role in Human-Centred Automation
 
 ```text
-raw sensor data -> preprocessing -> feature extraction -> state assessment -> evaluation
+wearable sensing
+-> operator-state estimation
+-> confidence and ambiguity assessment
+-> assistance / task-allocation / interface feedback
+-> human confirmation or system adaptation
 ```
 
-In this repository, the current state-assessment task is baseline vs stress recognition from wearable Empatica E4 signals. The demo should be read as a baseline research example, not a final deployable stress-recognition system or a clinical tool. Its purpose is to show a reproducible path from raw physiological and motion data to a transparent human-state sensing evaluation.
+The current repository implements wearable sensing, baseline/stress state modelling, uncertainty flags, subject profiles, and feedback cards. It does not yet implement robot control or adaptive task allocation. Its outputs can serve as a future operator-state input for HRC or other human-centred automation systems, with human confirmation and appropriate validation retained in the decision loop.
 
-For a fuller explanation of this positioning, see `docs/research_positioning.md`.
-
-## Human factors and ergonomics perspective
-
-This demo is not a physical ergonomics posture-risk demo. It does not estimate posture, joint loading, RULA/REBA scores, or musculoskeletal risk.
-
-Instead, it focuses on cognitive and affective ergonomics: stress, psychophysiological strain, and human-state assessment. The pipeline uses wrist-worn physiological and motion signals to estimate whether a subject is in a baseline or stress condition.
-
-From a human factors perspective, the analysis can be interpreted as an offline research example for studying operator state, workload-related signals, and human-centered sensing. The current result is a baseline demonstration, not a deployable stress-monitoring system, diagnosis tool, medical advice, or health assessment product.
-
-For a fuller explanation of this human factors framing, see `docs/human_factors_positioning.md`.
-
-## Interpretation and feedback layer
-
-This repository is no longer only a classifier demo. It also explores how wearable signals can be transformed into interpretable user-state indicators for human-computer interaction research.
-
-The added interpretation layer generates subject-level state profiles, lightweight explanation summaries, ambiguity reports, and user-facing feedback card examples. These artifacts are generated locally from the user's own WESAD copy and are written under `outputs/`.
-
-The layer uses transparent methods: feature-group aggregation, logistic-regression model-associated feature weights, descriptive stress-minus-baseline feature differences, and probability-based ambiguity flags for logistic-regression outputs near 0.5. These summaries are intended to support careful interpretation of the WESAD protocol baseline/stress distinction. They are not causal explanations and are not clinical conclusions.
-
-Generated profile tables, feature-change tables, ambiguity reports, and feedback cards are not committed because they are derived from WESAD subject data. This repository remains a research demo, not a clinical system, diagnosis tool, medical advice, or deployable stress monitor.
-
-For a fuller explanation of this layer, see `docs/feedback_interpretation_layer.md`.
-
-## Exploratory State-Feedback Relevance
-
-This demo is exploratory and non-clinical. It is not intended to develop a
-deployable stress-monitoring product, mental-health diagnosis tool, or
-deployment-ready health-monitoring product. Instead, it explores how wearable
-physiological signals can be organized into interpretable human-state
-indicators as a state-feedback extension.
-
-In my current PhD application narrative, this repository is kept separate from
-the main monitoring-to-decision line for engineering assets. It can be read as a
-small exploratory extension of the same state-assessment logic, rather than as a
-new core HCI direction.
-
-The feedback question here is not only whether baseline and stress conditions
-can be classified, but how sensing outputs may be communicated in a personalized
-and understandable way. The current feedback cards are illustrative research
-artifacts only.
-
-## Pipeline Overview
+## Completed pipeline
 
 ![Public-safe pipeline overview schematic](docs/assets/pipeline_overview.png)
 
-The public-safe schematic above summarizes the repository flow: raw Empatica E4 ACC, BVP, EDA, and TEMP signals are segmented by protocol windows, converted into interpretable features, modeled for baseline/stress classification, and summarized as user-state indicators.
+The implemented pipeline covers:
 
-The current wearable signals are ACC, BVP, EDA, and TEMP from the wrist-worn Empatica E4. The current repository does not use video, audio, EEG, eye tracking, posture data, or other sensing channels.
+- raw Empatica E4 ACC, BVP, EDA, and TEMP ingestion from each subject archive;
+- protocol-based window segmentation using questionnaire timing metadata;
+- interpretable multimodal statistical feature extraction;
+- leave-one-subject-out baseline/stress modelling with logistic regression and random forest baselines;
+- subject-level state profiles;
+- uncertainty and ambiguous-output flags for logistic-regression probabilities near the decision boundary; and
+- feedback-card generation for interpretable state communication.
 
-## Dataset Access
+The interpretation layer combines feature-group summaries, model-associated feature weights, descriptive stress-minus-baseline differences, and probability-based ambiguity flags. These are transparent associations and decision aids rather than causal explanations. More detail is available in [the feedback interpretation documentation](docs/feedback_interpretation_layer.md).
 
-This repository does not redistribute the WESAD dataset. Users must obtain WESAD from the official dataset source and comply with the official license or access terms themselves.
-
-The local data layout below is documented only so that experiments can be reproduced after users have obtained the dataset independently. The repository provides a reproducible processing and evaluation pipeline, not the dataset itself.
-
-In the expected local layout, raw WESAD subject folders, raw subject files, `.pkl` files, Empatica E4 zip files, quest files, and generated outputs are ignored and should not be committed. Keep local dataset files under `data/` and generated results under `outputs/`.
-
-## Evaluation Scheme
+## Evaluation scheme
 
 ![Public-safe leave-one-subject-out evaluation schematic](docs/assets/evaluation_scheme.png)
 
-The evaluation schematic shows the leave-one-subject-out setup used for multi-subject baseline assessment: each fold trains on 14 WESAD subjects, tests on 1 held-out subject, and reports aggregate accuracy and macro-F1. The figure is schematic only and does not contain WESAD signal traces, subject-level timelines, feature tables, or subject-level results.
+For multi-subject evaluation, each leave-one-subject-out fold trains on 14 participants and evaluates on one held-out participant. The current binary evaluation contains 897 baseline/stress windows from 15 participants; all predictions are made for participants excluded from their corresponding training folds.
 
-## Expected Local Data Layout
+## Public aggregate results
 
-After obtaining WESAD independently, keep the local folder structure unchanged:
+The current LOSO baseline reports:
+
+- logistic regression: accuracy **0.7781**, macro-F1 **0.7677**;
+- random forest: accuracy **0.7458**, macro-F1 **0.7090**;
+- across 15 anonymised held-out folds, logistic-regression macro-F1 has median **0.7948** (IQR **0.7293–0.8265**), while random-forest macro-F1 has median **0.7703** (IQR **0.4582–0.8104**).
+
+Only aggregate and anonymised material is published here. The machine-readable summary is in [`docs/public_results/public_results_summary.csv`](docs/public_results/public_results_summary.csv).
+
+![Aggregate leave-one-subject-out confusion matrices](docs/public_results/aggregate_confusion_matrix.png)
+
+![Anonymised held-out-fold macro-F1 distribution](docs/public_results/subject_level_f1_distribution.png)
+
+See the [generic example feedback card](docs/public_results/example_feedback_card.md) for a public-safe illustration of how an ambiguous operator-state output could be communicated.
+
+## Dataset access
+
+This repository does not redistribute WESAD. Users must obtain the dataset from its official source and comply with its licence or access terms.
+
+After obtaining WESAD independently, place subject files under `data/`:
 
 ```text
 wearable-human-state-profiling/
@@ -100,109 +74,39 @@ wearable-human-state-profiling/
 |  |  |- S2_quest.csv
 |  |  |- S2_readme.txt
 |  |  `- S2.pkl
-|  |- S3/
-|  |  |- S3_E4_Data.zip
-|  |  |- S3_quest.csv
-|  |  |- S3_readme.txt
-|  |  `- S3.pkl
 |  `- ...
 `- src/
 ```
 
-The demo uses:
+The pipeline reads `Sx_E4_Data.zip` and `Sx_quest.csv`; `Sx_readme.txt` is an optional reference, and `Sx.pkl` is not used as the main input. Raw subject folders, archives, `.pkl` files, generated feature tables, reports, and full outputs remain local and ignored by Git.
 
-- `Sx_E4_Data.zip` as the main raw input
-- `Sx_quest.csv` for protocol timing
-- `Sx_readme.txt` only as an optional reference
+## Run the demo
 
-The demo does not use `Sx.pkl` as the main input.
-
-## Do Not Commit Data
-
-The WESAD dataset files should be kept locally under `data/` and must not be uploaded to GitHub. Generated outputs should be kept locally under `outputs/` and should not be committed.
-
-## How To Run The S2 Demo
-
-Run the exact command below from the project root:
+Run a single-subject processing demo from the project root:
 
 ```bash
 python -m src.run_demo --data_dir data --subjects S2 --output_dir outputs --task binary
 ```
 
-## Optional Multi-Subject Run
-
-If you want to test multiple subjects later, you can run:
+Run the current multi-subject evaluation with:
 
 ```bash
 python -m src.run_demo --data_dir data --subjects S2 S3 S4 S5 S6 S7 S8 S9 S10 S11 S13 S14 S15 S16 S17 --output_dir outputs --task binary
 ```
 
-## Current Results
+The demo writes generated figures, reports, model metrics, subject summaries, ambiguity tables, feedback cards, and window features under `outputs/`. That directory is intentionally ignored and must not be committed.
 
-The current multi-subject baseline was run on these subjects:
+## Scope and limitations
 
-- Subjects: `S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, S13, S14, S15, S16, S17`
-- Total valid windows: `1424`
-- Binary modeling windows: `897`
-- Evaluation: `leave-one-subject-out`
-- Logistic regression: accuracy `0.7781`, macro-F1 `0.7677`
-- Random forest: accuracy `0.7458`, macro-F1 `0.7090`
+- This is not a clinical stress detector, mental-health diagnosis method, deployable stress-monitoring product, or source of medical advice.
+- This is not yet an HRC control system: robot adaptation and adaptive task allocation have not been implemented.
+- WESAD is used as an experimental public dataset; users must obtain it from the official source and licence it themselves.
+- Generated subject-level outputs, subject time series, window-level features, raw archives, and raw signals are not committed.
+- Protocol labels distinguish the dataset's baseline and stress conditions; they do not establish a person's health or mental state.
+- The current preprocessing does not fully solve E4–RespiBAN synchronisation. Future work may add stronger synchronisation, HRV features, EDA decomposition, motion-artifact filtering, probability calibration, and validation in task-specific human-centred automation studies.
 
-This is a baseline demo using raw Empatica E4 CSV data and protocol timings from `Sx_quest.csv`.
+## Dataset citation
 
-Logistic regression performed slightly better than random forest in this baseline setting. The result suggests that simple statistical features from wrist-worn signals contain useful stress-related information in this benchmark task. The result should be interpreted as a baseline, not a final stress-recognition system, health product, or clinical method.
-
-## What The Demo Does
-
-1. Finds subject folders under `data/`
-2. Reads raw `ACC.csv`, `BVP.csv`, `EDA.csv`, and `TEMP.csv` from each subject's `Sx_E4_Data.zip`
-3. Parses condition order and time ranges from `Sx_quest.csv`
-4. Segments each condition into 60-second windows with a 30-second step
-5. Extracts simple statistical features from each window
-6. Trains baseline binary classifiers for `baseline` vs `stress`
-7. Exports tables, a confusion matrix figure, an EDA timeline figure, and a short markdown report
-8. Builds subject-level baseline/stress state profiles
-9. Summarizes lightweight model-associated and descriptive explanations
-10. Flags ambiguous logistic-regression outputs near the binary decision boundary
-11. Generates research-demo feedback card examples for HCI interpretation
-
-## Output Files
-
-The demo writes these files:
-
-```text
-outputs/
-|- demo_report.md
-|- figures/
-|  |- confusion_matrix.png
-|  `- eda_timeline.png
-|- reports/
-|  |- subject_profile_cards.md
-|  `- user_feedback_cards.md
-`- tables/
-   |- classification_report.csv
-   |- confusion_matrix.csv
-   |- feature_importance_summary.csv
-   |- feedback_card_summary.csv
-   |- model_results.csv
-   |- subject_state_profiles.csv
-   |- subject_loso_metrics.csv
-   |- subject_top_feature_changes.csv
-   |- subject_window_summary.csv
-   |- uncertain_windows.csv
-   `- window_features.csv
-```
-
-These outputs include the extracted window-level features, subject-level window counts, model metrics, subject-level leave-one-subject-out metrics, a detailed classification report, a confusion matrix table, beginner-friendly visual summaries, subject-level profile summaries, lightweight explanation tables, ambiguity reports, and feedback-card examples.
-
-## Limitations
-
-This raw E4 CSV version uses protocol timings from `Sx_quest.csv` and does not fully solve E4-RespiBAN synchronization. It uses only Empatica E4 ACC, BVP, EDA, and TEMP signals; it does not use video, audio, EEG, eye tracking, posture data, RULA/REBA scoring, or musculoskeletal-load assessment. More advanced versions may add double-tap synchronization, HRV features, EDA tonic/phasic decomposition, motion artifact filtering, and optional `Sx.pkl` validation.
-
-The current pipeline is a baseline research demonstration, not a deployable stress-monitoring system, occupational health system, clinical system, diagnosis tool, or source of medical advice.
-
-## Dataset Citation
-
-If you use WESAD in your work, please cite:
+If you use WESAD, please cite:
 
 Philip Schmidt, Attila Reiss, Robert Duerichen, Claus Marberger, and Kristof Van Laerhoven. 2018. Introducing WESAD, a multimodal dataset for Wearable Stress and Affect Detection. ICMI 2018.

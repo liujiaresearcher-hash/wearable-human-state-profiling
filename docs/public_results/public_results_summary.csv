@@ -1,0 +1,3 @@
+model_name,evaluation_mode,aggregate_accuracy,aggregate_macro_f1,heldout_fold_count,subject_macro_f1_mean,subject_macro_f1_median,subject_macro_f1_std,subject_macro_f1_min,subject_macro_f1_q1,subject_macro_f1_q3,subject_macro_f1_max
+logistic_regression,leave-one-subject-out,0.778149,0.767728,15,0.747820,0.794802,0.175324,0.324009,0.729268,0.826522,0.962500
+random_forest,leave-one-subject-out,0.745819,0.709018,15,0.665377,0.770332,0.217398,0.253333,0.458163,0.810419,0.921727
